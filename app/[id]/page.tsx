@@ -5,11 +5,8 @@ import { notFound } from "next/navigation";
 
 // Content mapping - add your Notion URLs here
 // TODO(stagewise): Add new content by adding entries here
+// Note: devops-series is now handled by /app/devops-series/page.tsx
 const contentMap: Record<string, { title: string; notionUrl: string }> = {
-  "devops-series": {
-    title: "DevOps Mastery Series",
-    notionUrl: "https://atulmaurya.notion.site/Let-s-learn-DevOps-29d76b1df1a88072a9bfcc78d1c7d881?source=copy_link"
-  }
   // TODO(stagewise): Add more content like this:
   // "openai-devday": {
   //   title: "OpenAI DevDay Insights",
@@ -34,7 +31,21 @@ export default async function ContentPage({ params }: ContentPageProps) {
     return notFound()
   }
 
-  const recordMap = await fetchRecordMap(content.notionUrl)
+  let recordMap
+  try {
+    recordMap = await fetchRecordMap(content.notionUrl)
+  } catch (error) {
+    console.error('Error fetching Notion content:', error)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Error Loading Content</h1>
+          <p className="text-gray-600 mb-4">Failed to load Notion content</p>
+          <Link href="/" className="text-blue-600 hover:text-blue-700">Back to Home</Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -42,7 +53,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
       <div className="max-w-920 mx-auto px-6 py-4">
         <Link 
           href="/"
-          className="inline-flex items-center text-black hover:text-gray-700 dark:text-white dark:hover:text-gray-200 font-bold mb-6 transition-colors duration-200 opacity-100 text-lg"
+          className="inline-flex items-center text-black hover:text-gray-700 font-bold mb-6 transition-colors duration-200 opacity-100 text-lg"
           style={{ color: '#000000' }}
         >
           <svg className="w-7 h-7 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +64,11 @@ export default async function ContentPage({ params }: ContentPageProps) {
       </div>
       
       <main style={{ maxWidth: 920, margin: "0 auto", padding: 24 }}>
-        <NotionRendererWrapper recordMap={recordMap} fullPage={true} darkMode={false} />
+        <NotionRendererWrapper 
+          recordMap={recordMap} 
+          fullPage={true} 
+          darkMode={false}
+        />
       </main>
     </div>
   )
