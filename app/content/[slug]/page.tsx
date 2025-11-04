@@ -4,33 +4,40 @@ import NotionRendererWrapper from "@/components/NotionRenderer";
 import { notFound } from "next/navigation";
 
 // Content mapping - add your Notion URLs here
-// TODO(stagewise): Add new content by adding entries here
-const contentMap: Record<string, { title: string; notionUrl: string }> = {
-  "devops-series": {
+const contentMap = {
+  "devops-mastery": {
     title: "DevOps Mastery Series",
     notionUrl: "https://atulmaurya.notion.site/Let-s-learn-DevOps-29d76b1df1a88072a9bfcc78d1c7d881?source=copy_link"
+  },
+  "cloud-fundamentals": {
+    title: "Cloud Computing Fundamentals", 
+    notionUrl: "" // TODO(stagewise): Add your cloud series Notion URL here
+  },
+  "kubernetes-deep-dive": {
+    title: "Kubernetes Deep Dive",
+    notionUrl: "" // TODO(stagewise): Add your Kubernetes series Notion URL here
+  },
+  "docker-best-practices": {
+    title: "Docker Best Practices for Production",
+    notionUrl: "" // TODO(stagewise): Add your Docker blog Notion URL here
+  },
+  "ci-cd-pipeline": {
+    title: "Building Robust CI/CD Pipelines", 
+    notionUrl: "" // TODO(stagewise): Add your CI/CD blog Notion URL here
   }
-  // TODO(stagewise): Add more content like this:
-  // "openai-devday": {
-  //   title: "OpenAI DevDay Insights",
-  //   notionUrl: "your-notion-url-here"
-  // },
-  // "cloud-series": {
-  //   title: "Cloud Computing Fundamentals",
-  //   notionUrl: "your-cloud-notion-url"
-  // }
 }
 
 interface ContentPageProps {
-  params: Promise<{ id: string }>
+  params: {
+    slug: string
+  }
 }
 
 export default async function ContentPage({ params }: ContentPageProps) {
-  const { id } = await params
-  const content = contentMap[id]
+  const { slug } = params
+  const content = contentMap[slug as keyof typeof contentMap]
   
-  // If no content found or no Notion URL, show 404
-  if (!content || !content.notionUrl || content.notionUrl.trim() === '') {
+  if (!content || !content.notionUrl) {
     return notFound()
   }
 
@@ -59,9 +66,8 @@ export default async function ContentPage({ params }: ContentPageProps) {
   )
 }
 
-// Generate static params for all available content
 export async function generateStaticParams() {
-  return Object.keys(contentMap).map((id) => ({
-    id: id,
+  return Object.keys(contentMap).map((slug) => ({
+    slug: slug,
   }))
 }

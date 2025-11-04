@@ -4,33 +4,49 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 
+// Type definition for content items
+type ContentItem = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  slug: string;
+  notionUrl: string;
+}
+
 // TODO(stagewise): Replace with real series data from your backend/CMS
-const mockSeries = [
+const mockSeries: ContentItem[] = [
   {
     id: "devops-series",
     title: "DevOps Mastery Series",
     description: "Complete guide to DevOps practices, tools, and methodologies. Learn CI/CD, containerization, monitoring, and more.",
-    image: "/series-devops.jpg",
-    slug: "devops-mastery"
+    image: "https://img.youtube.com/vi/s5OaI4sMdaw/maxresdefault.jpg",
+    slug: "devops-series", // This creates URL: /devops-series
+    notionUrl: "https://atulmaurya.notion.site/Let-s-learn-DevOps-29d76b1df1a88072a9bfcc78d1c7d881?source=copy_link"
   }
+  // TODO(stagewise): Add more series here like:
+  // {
+  //   id: "openai-devday",
+  //   title: "OpenAI DevDay Insights",
+  //   description: "Latest updates and insights from OpenAI DevDay...",
+  //   image: "your-image-url",
+  //   slug: "openai-devday", // URL will be: /openai-devday
+  //   notionUrl: "your-notion-url-here"
+  // }
 ]
 
 // TODO(stagewise): Replace with real blog data
-const mockBlogs = [
-  {
-    id: "docker-best-practices",
-    title: "Docker Best Practices for Production",
-    description: "Essential Docker practices for building secure, efficient containers in production environments.",
-    image: "/blog-docker.jpg",
-    slug: "docker-best-practices"
-  },
-  {
-    id: "ci-cd-pipeline",
-    title: "Building Robust CI/CD Pipelines",
-    description: "Step-by-step guide to creating reliable continuous integration and deployment workflows.",
-    image: "/blog-cicd.jpg",
-    slug: "ci-cd-pipeline"
-  }
+// TODO(stagewise): Replace with real blog data when ready
+const mockBlogs: ContentItem[] = [
+  // Currently no blogs - uncomment and add your blogs here when ready
+  // {
+  //   id: "docker-best-practices",
+  //   title: "Docker Best Practices for Production",
+  //   description: "Essential Docker practices for building secure, efficient containers in production environments.",
+  //   image: "/blog-docker.jpg",
+  //   slug: "docker-best-practices",
+  //   notionUrl: "" // Add your Docker blog Notion URL here
+  // }
 ]
 
 export default function HomePage() {
@@ -154,27 +170,47 @@ export default function HomePage() {
 
       {/* Content Cards */}
       <section className="max-w-6xl mx-auto px-6 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentContent.map((item) => (
+        {currentContent.length === 0 ? (
+          /* Empty State */
+          <div className="text-center py-16">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-12 max-w-md mx-auto">
+              <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                {activeFilter === 'blogs' ? 'Blogs are Planning for You' : 'No Series Yet'}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {activeFilter === 'blogs' 
+                  ? 'Exciting blog posts are in the works! Stay tuned for amazing content.'
+                  : 'New series content is coming soon. Check back later!'}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {currentContent.map((item) => (
             <Link
               key={item.id}
-              href={`/notion-content`}
+              href={item.notionUrl && item.notionUrl.trim() !== '' ? `/${item.slug}` : `/notion-content`}
               className="group block"
             >
               <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
                 {/* Card Image */}
                 <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-                  {item.id === 'devops-series' ? (
+                  {item?.image && item.image.startsWith('http') ? (
                     <img 
-                      src="https://img.youtube.com/vi/s5OaI4sMdaw/maxresdefault.jpg" 
-                      alt={item.title}
+                      src={item.image} 
+                      alt={item?.title || 'Content image'}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     /* TODO(stagewise): Replace with actual images */
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-white text-6xl font-bold opacity-20">
-                        {item.title.charAt(0)}
+                        {item?.title?.charAt(0) || '?'}
                       </span>
                     </div>
                   )}
@@ -200,10 +236,10 @@ export default function HomePage() {
                 {/* Card Content */}
                 <div className="p-6 relative">
                   <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                    {item.title}
+                    {item?.title || 'Untitled'}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                    {item.description}
+                    {item?.description || 'No description available'}
                   </p>
                   
                   {/* Bottom Arrow */}
@@ -228,7 +264,8 @@ export default function HomePage() {
               </div>
             </Link>
           ))}
-        </div>
+          </div>
+        )}
       </section>
     </main>
   )
