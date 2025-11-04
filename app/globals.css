@@ -24,3 +24,61 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure nothing swallows clicks in the Notion subtree */
+.notion, .notion * { pointer-events: auto !important; }
+
+/* Native details/summary behavior + good cursor */
+details { display: block; }
+.notion-toggle > summary {
+  display: list-item;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* If the content div relies on display toggling, enforce it */
+details.notion-toggle:not([open]) > div { display: none !important; }
+details.notion-toggle[open] > div { display: block !important; }
+
+/* Ensure toggle content is properly hidden/shown */
+.notion-toggle:not([open]) .notion-toggle-content { display: none !important; }
+.notion-toggle[open] .notion-toggle-content { display: block !important; }
+
+/* Keep toggles above any accidental overlay */
+.notion-toggle { position: relative; z-index: 10; }
+
+/* Fix code block rendering without breaking layout */
+.notion-code {
+  display: block;
+  white-space: pre-wrap;
+}
+
+/* Ensure code blocks are visible */
+pre.notion-code {
+  display: block;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Fix Notion page icon sizing */
+.notion-page-icon {
+  width: 78px !important;
+  height: 78px !important;
+  object-fit: cover !important;
+  border-radius: 3px !important;
+}
+
+/* Fix page icon container */
+.notion-page-icon-inline {
+  width: 78px !important;
+  height: 78px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
