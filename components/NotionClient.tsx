@@ -2,6 +2,8 @@
 
 import { NotionRenderer } from "react-notion-x";
 import type { ExtendedRecordMap } from "notion-types";
+import TweetEmbed from "./TweetEmbed";
+import CodeBlock from "./CodeBlock";
 
 export default function NotionClient({ recordMap }: { recordMap: ExtendedRecordMap }) {
   return (
@@ -12,6 +14,10 @@ export default function NotionClient({ recordMap }: { recordMap: ExtendedRecordM
         darkMode={false}
         mapPageUrl={(id) => (id ? `/p/${id}` : "#")}
         rootPageId={Object.keys(recordMap.block)[0]}
+        components={{
+          Tweet: TweetEmbed,
+          Code: CodeBlock,
+        }}
       />
     </div>
   );

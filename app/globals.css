@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Notion CSS imports for proper rendering */
+@import 'react-notion-x/src/styles.css';
+@import 'prismjs/themes/prism-tomorrow.css';
+@import 'katex/dist/katex.min.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -63,19 +68,121 @@ details.notion-toggle[open] > div { display: block !important; }
 .notion-code {
   display: block;
   white-space: pre-wrap;
-}
-
-/* Ensure code blocks are visible */
-pre.notion-code {
-  display: block;
-  background: #f6f8fa;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
-  padding: 16px;
-  overflow-x: auto;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 14px;
   line-height: 1.45;
+}
+
+/* Notion-style code blocks - with proper wrapping */
+pre.notion-code {
+  background: rgb(242, 241, 238) !important;
+  border: 1px solid rgba(55, 53, 47, 0.16) !important;
+  border-radius: 3px !important;
+  padding: 16px !important;
+  overflow-x: hidden !important;
+  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  margin: 4px 0 !important;
+  color: rgb(55, 53, 47) !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  tab-size: 4 !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Dark mode - Notion style */
+.dark pre.notion-code {
+  background: rgb(46, 45, 43) !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  color: rgba(255, 255, 255, 0.81) !important;
+}
+
+/* Generic code block styling - Notion replica with wrapping */
+.notion-code-block {
+  margin: 4px 0;
+}
+
+.notion-code-block pre {
+  background: rgb(242, 241, 238) !important;
+  border: 1px solid rgba(55, 53, 47, 0.16) !important;
+  border-radius: 3px !important;
+  padding: 16px !important;
+  overflow-x: hidden !important;
+  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: rgb(55, 53, 47) !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  tab-size: 4 !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Dark mode for generic code blocks - Notion style */
+.dark .notion-code-block pre {
+  background: rgb(46, 45, 43) !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  color: rgba(255, 255, 255, 0.81) !important;
+}
+
+.notion-code-caption {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.dark .notion-code-caption {
+  color: #9ca3af;
+}
+
+/* Fix blank code blocks */
+.notion-blank {
+  min-height: 20px;
+  display: block;
+}
+
+/* Notion-style code content with proper wrapping */
+.notion-code code,
+.notion-code-block code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  display: block;
+}
+
+/* Hide scrollbars since we're wrapping content */
+.notion-code::-webkit-scrollbar,
+.notion-code-block pre::-webkit-scrollbar {
+  display: none;
+}
+
+.notion-code,
+.notion-code-block pre {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Notion-style code block container behavior */
+.notion-code,
+.notion-code-block {
+  margin: 4px 0;
+}
+
+.notion-code,
+.notion-code-block pre {
+  width: 100%;
+  display: block;
 }
 
 /* Fix Notion page icon sizing */
@@ -93,4 +200,45 @@ pre.notion-code {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* Twitter embed styling within Notion content */
+.notion-embed {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.notion-embed iframe[src*="twitter.com"] {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Ensure Twitter widgets render properly */
+.twitter-tweet {
+  margin: 1rem auto !important;
+  max-width: 550px !important;
+}
+
+.notion-tweet-embed {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+/* Style Twitter embeds in dark mode */
+.dark .twitter-tweet {
+  color-scheme: dark;
+}
+
+/* Loading state for Twitter embeds */
+.notion-embed:empty::before {
+  content: 'Loading tweet...';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #666;
+  font-style: italic;
 }
